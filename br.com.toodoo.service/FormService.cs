@@ -2,6 +2,7 @@
 using br.com.toodoo.core.Interfaces.Infrastructure;
 using br.com.toodoo.core.Interfaces.Service;
 using br.com.toodoo.sharedkernel;
+using br.com.toodoo.sharedkernel.Interfaces;
 
 namespace br.com.toodoo.service;
 
@@ -9,7 +10,8 @@ public class FormService : BaseService<Form>, IFormService
 {
     private readonly IFormRepository _formRepository;
 
-    public FormService(IFormRepository formRepository)
+    public FormService(IFormRepository formRepository, INotifier notifier)
+        : base(notifier)
     {
         _formRepository = formRepository;
     }
@@ -21,6 +23,20 @@ public class FormService : BaseService<Form>, IFormService
 
     public async Task Delete(long formId)
     {
+        var hasFildsForm = await _formRepository.GetFormField(formId);
+
+        if (hasFildsForm == null)
+        {
+            Notificar("Formulário não localizado");
+            return;
+        }
+
+        if (hasFildsForm.Fields?.Count() > 0)
+        {
+            Notificar("O Formulário possui campos cadastrados");
+            return;
+        }
+
         await _formRepository.DeleteAsync(formId);
     }
 
