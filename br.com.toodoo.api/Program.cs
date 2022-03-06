@@ -17,7 +17,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(DomainToModel));
 builder.Services.AddScoped<IFormService, FormService>();
+builder.Services.AddScoped<IFieldService, FieldService>();
 builder.Services.AddScoped<IFormRepository, FormRepository>();
+builder.Services.AddScoped<IFieldRepository, FieldRepository>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DatabaseContext>(opt => opt.UseInMemoryDatabase("dbTest"));
