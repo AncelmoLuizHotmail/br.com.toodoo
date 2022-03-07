@@ -21,6 +21,14 @@ public class FormService : BaseService<Form>, IFormService
     {
         if (!ExecutarValidacao(new FormValidation(), form)) return false;
 
+        var dataForm = _formRepository.GetByIdAsync(form.Id);
+
+        if (dataForm.Result != null)
+        {
+            Notificar($"Já existe um formulário com id {form.Id} cadastrado");
+            return false;
+        }
+
         await _formRepository.AddAsync(form);
 
         return true;

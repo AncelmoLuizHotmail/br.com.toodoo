@@ -21,6 +21,14 @@ public class FieldService : BaseService<Field>, IFieldService
     {
         if (!ExecutarValidacao(new FieldValidation(), field)) return false;
 
+        var dataField = _fieldRepository.GetByIdAsync(field.Id);
+
+        if (dataField.Result != null)
+        {
+            Notificar($"Já existe um Campo com id {field.Id} cadastrado");
+            return false;
+        }
+
         await _fieldRepository.AddAsync(field);
 
         return true;
