@@ -11,5 +11,5 @@ public class Form : BaseEntity
     public DateTime? DateVersion { get; set; }
     public int? Active { get; set; }
     public string? Notes { get; set; }
-    public IEnumerable<Field>? Fields { get; set; }
+    public ICollection<Field>? Fields { get; set; }
 }

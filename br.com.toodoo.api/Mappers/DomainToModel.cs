@@ -10,6 +10,9 @@ public class DomainToModel : Profile
     public DomainToModel()
     {
         CreateMap<Form, FormModel>().ReverseMap();
-        CreateMap<Field, FieldModel>().ReverseMap();
+        CreateMap<FieldModel, Field>();
+
+        CreateMap<Field, FieldModel>()
+            .ForMember(d => d.FormName, opt => opt.MapFrom(src => src.Form.Name));
     }
 }

@@ -4,9 +4,11 @@ namespace br.com.toodoo.core.Interfaces.Service;
 
 public interface IFieldService
 {
-    Task<Field> Add(Field field);
-    Task Delete(long fieldId);
+    Task<bool> Add(Field field);
+    Task<bool> UpdateAsync(Field field);
+    Task<bool> Delete(long fieldId);
     Task<Field?> GetByIdAsync(long id);
     Task<List<Field>> ListAsync();
-    Task<Field> UpdateAsync(Field field);
+    Task<List<Field>> ListFormFieldsAsync(long formId);
+
 }

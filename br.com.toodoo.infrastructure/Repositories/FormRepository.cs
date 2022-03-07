@@ -14,8 +14,12 @@ public class FormRepository : BaseRepository<Form>, IFormRepository
 
     public async Task<Form> GetFormField(long id)
     {
-        return await DatabaseContext.Forms.AsNoTracking()
-            .Include(f => f.Fields)
+        var form = await DatabaseContext.Forms.AsNoTracking()
             .FirstOrDefaultAsync(f => f.Id == id);
+       
+        //TODO Alterar para Include quando estiver persistido no banco de dados
+        form.Fields = await DatabaseContext.Fields.Where(f => f.FormId == id).ToListAsync();
+
+        return form;
     }
 }

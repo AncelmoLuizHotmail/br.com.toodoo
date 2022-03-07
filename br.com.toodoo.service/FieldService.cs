@@ -17,19 +17,28 @@ public class FieldService : BaseService<Field>, IFieldService
         _fieldRepository = fieldRepository;
     }
 
-    public async Task<Field> Add(Field field)
+    public async Task<bool> Add(Field field)
     {
-        if (!ExecutarValidacao(new FieldValidation(), field))
-        {
-            return null;
-        }
+        if (!ExecutarValidacao(new FieldValidation(), field)) return false;
 
-        return await _fieldRepository.AddAsync(field);
+        await _fieldRepository.AddAsync(field);
+
+        return true;
+    }
+    public async Task<bool> UpdateAsync(Field field)
+    {
+        if (!ExecutarValidacao(new FieldValidation(), field)) return false;
+
+        await _fieldRepository.UpdateAsync(field);
+
+        return true;
     }
 
-    public async Task Delete(long fieldId)
+    public async Task<bool> Delete(long fieldId)
     {
         await _fieldRepository.DeleteAsync(fieldId);
+
+        return true;
     }
 
     public async Task<Field?> GetByIdAsync(long id)
@@ -42,13 +51,8 @@ public class FieldService : BaseService<Field>, IFieldService
         return await _fieldRepository.ListAsync();
     }
 
-    public async Task<Field> UpdateAsync(Field field)
+    public Task<List<Field>> ListFormFieldsAsync(long formId)
     {
-        if (!ExecutarValidacao(new FieldValidation(), field))
-        {
-            return null;
-        }
-
-        return await _fieldRepository.UpdateAsync(field);
+        return _fieldRepository.ListFormFieldsAsync(formId);
     }
 }

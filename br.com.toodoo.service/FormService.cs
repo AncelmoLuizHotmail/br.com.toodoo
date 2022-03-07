@@ -1,6 +1,7 @@
 ﻿using br.com.toodoo.core.FormAggregate;
 using br.com.toodoo.core.Interfaces.Infrastructure;
 using br.com.toodoo.core.Interfaces.Service;
+using br.com.toodoo.core.Validations;
 using br.com.toodoo.sharedkernel;
 using br.com.toodoo.sharedkernel.Interfaces;
 
@@ -16,28 +17,43 @@ public class FormService : BaseService<Form>, IFormService
         _formRepository = formRepository;
     }
 
-    public async Task<Form> Add(Form form)
+    public async Task<bool> Add(Form form)
     {
-        return await _formRepository.AddAsync(form);
+        if (!ExecutarValidacao(new FormValidation(), form)) return false;
+
+        await _formRepository.AddAsync(form);
+
+        return true;
     }
 
-    public async Task Delete(long formId)
+    public async Task<bool> UpdateAsync(Form form)
+    {
+        if (!ExecutarValidacao(new FormValidation(), form)) return false;
+
+        await _formRepository.UpdateAsync(form);
+
+        return true;
+    }
+
+    public async Task<bool> Delete(long formId)
     {
         var hasFildsForm = await _formRepository.GetFormField(formId);
 
         if (hasFildsForm == null)
         {
             Notificar("Formulário não localizado");
-            return;
+            return false;
         }
 
         if (hasFildsForm.Fields?.Count() > 0)
         {
             Notificar("O Formulário possui campos cadastrados");
-            return;
+            return false;
         }
 
         await _formRepository.DeleteAsync(formId);
+
+        return true;
     }
 
     public async Task<Form?> GetByIdAsync(long id)
@@ -50,8 +66,8 @@ public class FormService : BaseService<Form>, IFormService
         return await _formRepository.ListAsync();
     }
 
-    public async Task<Form> UpdateAsync(Form form)
+    public async Task<Form> GetFormFields(long formId)
     {
-        return await _formRepository.UpdateAsync(form);
+        return await _formRepository.GetFormField(formId);
     }
 }

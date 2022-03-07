@@ -11,10 +11,15 @@ internal class FieldConfiguration : BaseEntityTypeConfiguration<Field>
     {
         base.Configure(builder);
 
-        builder.Property(x => x.Id).HasColumnName("id").IsRequired().ValueGeneratedOnAdd();
-        builder.Property(x => x.Name).HasColumnName("nome");
-        builder.Property(x => x.Value).HasColumnName("valor");
-        builder.Property(x => x.FormId).HasColumnName("FormId").IsRequired();
-        builder.HasOne(f => f.Form);
+        builder.Property(x => x.Id)
+            .HasColumnName("id")
+            .IsRequired()
+            .ValueGeneratedOnAdd();
+
+        builder.Property(x => x.Name)
+            .HasColumnName("nome");
+
+        builder.Property(x => x.Value)
+            .HasColumnName("valor");
     }
 }
